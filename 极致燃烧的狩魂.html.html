@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="../layui/layui-v2.6.8/layui/css/layui.css">
+    <style type="text/css">
+        body{
+            overflow: hidden;
+            margin: 0;
+            font-family:'新宋体'12px;
+        }
+        *{
+            margin: 0px;
+            padding: 0px;
+        }
+        a{
+            color: rgb(0, 0, 0);
+        }
+        #no1{
+           margin-left: 25%;
+            height: 600px;
+            width: 50%;
+           
+        }
+        #w1,#w2,#w3,#w4,#w5{
+            /* background-color: rgb(255, 255, 255); */
+           
+        }
+        #w1{
+           
+            /* background-color: rgb(249, 249, 249); */
+            border:1px solid rgb(255, 255, 255);
+             border-radius:20px ;
+            height: 50px;
+            width: 100%;
+        }
+        #w1 li{
+            margin-top: 10px;
+            text-align: center;
+        }
+        #w2{
+            height: 600px;
+            background-color:rgb(248 248 248);
+             border-radius:20px ;
+            width: 100%;
+        }
+        #w2 ul li{
+            margin-left: 40px;
+        }
+
+        #w2 .hz{
+            float: left;
+            margin-left: 12px;
+            /* background-color: blanchedalmond; */
+            height: 70px;
+            width: 90px;
+        }
+        .hz img{
+            text-align: center;
+        }
+        .hz li{
+        
+            text-align: center;
+        }
+        ol{
+            margin-left:55px;
+        }
+       ol li{
+        padding: 3px;
+        
+        list-style-type:decimal;
+       }
+       #w3{
+        width: 100%;
+       }
+    </style>
+    <script>
+        (function(window,document,undefined){
+                var hearts = [];
+                window.requestAnimationFrame = (function(){
+                        return window.requestAnimationFrame ||
+                                   window.webkitRequestAnimationFrame ||
+                                   window.mozRequestAnimationFrame ||
+                                   window.oRequestAnimationFrame ||
+                                   window.msRequestAnimationFrame ||
+                                   function (callback){
+                                           setTimeout(callback,1000/60);
+                                   }
+                })();
+                init();
+                function init(){
+                        css(".heart{width: 10px;height: 10px;position: fixed;background: #f00;transform: rotate(45deg);-webkit-transform: rotate(45deg);-moz-transform: rotate(45deg);}.heart:after,.heart:before{content: '';width: inherit;height: inherit;background: inherit;border-radius: 50%;-webkit-border-radius: 50%;-moz-border-radius: 50%;position: absolute;}.heart:after{top: -5px;}.heart:before{left: -5px;}");
+                        attachEvent();
+                        gameloop();
+                }
+                function gameloop(){
+                        for(var i=0;i<hearts.length;i++){
+                            if(hearts[i].alpha <=0){
+                                    document.body.removeChild(hearts[i].el);
+                                    hearts.splice(i,1);
+                                    continue;
+                            }
+                            hearts[i].y--;
+                            hearts[i].scale += 0.004;
+                            hearts[i].alpha -= 0.013;
+                            hearts[i].el.style.cssText = "left:"+hearts[i].x+"px;top:"+hearts[i].y+"px;opacity:"+hearts[i].alpha+";transform:scale("+hearts[i].scale+","+hearts[i].scale+") rotate(45deg);background:"+hearts[i].color;
+                    }
+                    requestAnimationFrame(gameloop);
+                }
+                function attachEvent(){
+                        var old = typeof window.onclick==="function" && window.onclick;
+                        window.onclick = function(event){
+                                old && old();
+                                createHeart(event);
+                        }
+                }
+                function createHeart(event){
+                    var d = document.createElement("div");
+                    d.className = "heart";
+                    hearts.push({
+                            el : d,
+                            x : event.clientX - 5,
+                            y : event.clientY - 5,
+                            scale : 1,
+                            alpha : 1,
+                            color : randomColor()
+                    });
+                    document.body.appendChild(d);
+            }
+            function css(css){
+                    var style = document.createElement("style");
+                        style.type="text/css";
+                        try{
+                            style.appendChild(document.createTextNode(css));
+                        }catch(ex){
+                            style.styleSheet.cssText = css;
+                        }
+                        document.getElementsByTagName('head')[0].appendChild(style);
+            }
+                function randomColor(){
+                        return "rgb("+(~~(Math.random()*255))+","+(~~(Math.random()*255))+","+(~~(Math.random()*255))+")";
+                }
+        })(window,document);
+        </script>
+    <script>
+        'use strict';
+
+// Initial Setup
+var canvas = document.querySelector('canvas');
+var c = canvas.getContext('2d');
+
+canvas.width = innerWidth;
+canvas.height = innerHeight;
+
+// Variables
+var mouse = {
+	x: innerWidth / 2,
+	y: innerHeight / 2 - 80
+};
+
+var colors = ['#00bdff', '#4d39ce', '#088eff'];
+
+// Event Listeners
+addEventListener('mousemove', function (event) {
+	mouse.x = event.clientX;
+	mouse.y = event.clientY;
+});
+
+addEventListener('resize', function () {
+	canvas.width = innerWidth;
+	canvas.height = innerHeight;
+
+	init();
+});
+
+// Utility Functions
+function randomIntFromRange(min, max) {
+	return Math.floor(Math.random() * (max - min + 1) + min);
+}
+
+function randomColor(colors) {
+	return colors[Math.floor(Math.random() * colors.length)];
+}
+
+// Objects
+function Particle(x, y, radius, color) {
+	var _this = this;
+
+	var distance = randomIntFromRange(50, 120);
+	this.x = x;
+	this.y = y;
+	this.radius = radius;
+	this.color = color;
+	this.radians = Math.random() * Math.PI * 2;
+	this.velocity = 0.05;
+	this.distanceFromCenter = {
+		x: distance,
+		y: distance
+	};
+	this.prevDistanceFromCenter = {
+		x: distance,
+		y: distance
+	};
+	this.lastMouse = { x: x, y: y };
+
+	this.update = function () {
+		var lastPoint = { x: _this.x, y: _this.y };
+		// Move points over time
+		_this.radians += _this.velocity;
+
+		// Drag effect
+		_this.lastMouse.x += (mouse.x - _this.lastMouse.x) * 0.05;
+		_this.lastMouse.y += (mouse.y - _this.lastMouse.y) * 0.05;
+
+		// Circular Motion
+		_this.distanceFromCenter.x = _this.prevDistanceFromCenter.x + Math.sin(_this.radians) * 100;
+		_this.distanceFromCenter.y = _this.prevDistanceFromCenter.x + Math.sin(_this.radians) * 100;
+
+		_this.x = _this.lastMouse.x + Math.cos(_this.radians) * _this.distanceFromCenter.x;
+		_this.y = _this.lastMouse.y + Math.sin(_this.radians) * _this.distanceFromCenter.y;
+
+		_this.draw(lastPoint);
+	};
+
+	this.draw = function (lastPoint) {
+		c.beginPath();
+		c.strokeStyle = _this.color;
+		c.lineWidth = _this.radius;
+		c.moveTo(lastPoint.x, lastPoint.y);
+		c.lineTo(_this.x, _this.y);
+		c.stroke();
+		c.closePath();
+	};
+}
+
+// Implementation
+var particles = undefined;
+function init() {
+	particles = [];
+
+	for (var i = 0; i < 50; i++) {
+		var radius = Math.random() * 2 + 1;
+		particles.push(new Particle(canvas.width / 2, canvas.height / 2, radius, randomColor(colors)));
+	}
+}
+
+// Animation Loop
+function animate() {
+	requestAnimationFrame(animate);
+	c.fillStyle = 'rgba(255, 255, 255, 0.05)';
+	c.fillRect(0, 0, canvas.width, canvas.height);
+
+	particles.forEach(function (particle) {
+		particle.update();
+	});
+}
+
+init();
+animate();
+    </script>
+</head>
+
+<body>
+    <div class="layui-row"id="no1">
+        <div class="layui-col-xs6 layui-col-sm6 layui-col-md4"id="w1">
+                <li>综合网站导航</li>
+        </div>
+        <div class="layui-col-xs6 layui-col-sm6 layui-col-md4"id="w2">
+            <div class="layui-tab layui-tab-brief">
+                <ul class="layui-tab-title">
+                  <li class="layui-this">畅想娱乐</li>
+                  <li>影视应用</li>
+                  <li>奇门科技</li>
+                  <li>短视频</li>
+                  <li>活动/咨询</li>
+                </ul>
+                <div class="layui-tab-content" style="height: 100px;">
+                  <div class="layui-tab-item layui-show">
+                    <ol>
+                        <li><a href="https://www.bilibili.com/">哔哩哔哩</a></li>
+                        
+                    </ol>
+                </div>
+                  <div class="layui-tab-item">
+                      <ol><li><a href="https://fsyy.fun/">番茄影视（画质较好）</a></li>
+                        <li><a href="http://www.yinghuacd.com/?ivk_sa=1026860c">樱花动漫（动漫专区）</a></li>
+                      </ol>
+                  </div>
+                  <div class="layui-tab-item">
+                    <ol>
+                        <li><a href="https://www.runoob.com/">菜鸟教程（IT网页教程）</a></li>
+                    </ol>
+                  </div>
+                  <div class="layui-tab-item">4</div>
+                  <div class="layui-tab-item">
+                    <ol>
+                    <li><a href="https://www.chsi.com.cn/">学信网（随时随地查）</a></li>
+                </ol>
+                  </div>
+                  <div class="layui-tab-item">6</div>
+                </div>
+              </div>
+        </div>
+        <div class="layui-col-xs4 layui-col-sm12 layui-col-md4"id="w3">
+            4/12
+        </div>
+        <!-- <div class="layui-col-xs4 layui-col-sm7 layui-col-md8"id="w4">
+         4/12
+        </div>
+        <div class="layui-col-xs4 layui-col-sm5 layui-col-md4"id="w5">
+         333
+        </div> -->
+      </div>
+    </div>
+    <canvas></canvas>
+</body>
+<script src="../layui/layui-v2.6.8/layui/layui.js"></script>
+<script>
+  layui.use('element', function(){
+  var element = layui.element;
+  
+  //一些事件
+  element.on('tab(demo)', function(data){
+    console.log(data);
+  });
+});
+</script> 
+</html>
